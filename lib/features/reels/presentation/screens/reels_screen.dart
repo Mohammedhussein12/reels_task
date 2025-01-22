@@ -28,7 +28,7 @@ class ReelsScreen extends StatelessWidget {
             if (state is ReelsLoadingState) {
               return const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.white,
+                  color: Colors.blue,
                 ),
               );
             } else if (state is ReelsErrorState) {
