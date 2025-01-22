@@ -55,7 +55,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           )
         : const Center(
             child: CircularProgressIndicator(
-              color: Colors.white,
+              color: Colors.blue,
             ),
           );
   }
