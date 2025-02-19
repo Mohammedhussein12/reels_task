@@ -20,8 +20,6 @@ import '../../features/reels/data/repositories/reel_repository_impl.dart'
     as _i199;
 import '../../features/reels/domain/repositories/reel_repository.dart' as _i262;
 import '../../features/reels/domain/use_cases/get_reels_use_case.dart' as _i333;
-import '../../features/reels/presentation/providers/reels_notifier.dart'
-    as _i1006;
 import '../data/remote/api_consumer.dart' as _i315;
 import '../data/remote/dio_consumer.dart' as _i338;
 import 'register_module.dart' as _i291;
@@ -47,8 +45,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i199.ReelRepositoryImpl(gh<_i298.ReelsRemoteDataSource>()));
     gh.lazySingleton<_i333.GetReelsUseCase>(
         () => _i333.GetReelsUseCase(gh<_i262.ReelRepository>()));
-    gh.factory<_i1006.ReelsProvider>(
-        () => _i1006.ReelsProvider(gh<_i333.GetReelsUseCase>()));
     return this;
   }
 }
