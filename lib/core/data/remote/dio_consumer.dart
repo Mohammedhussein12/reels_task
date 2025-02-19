@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../constants.dart';
 import '../../error/exceptions.dart';
 import 'api_consumer.dart';
 
+@LazySingleton(as: ApiConsumer)
 class DioConsumer extends ApiConsumer {
   final Dio dio;
 
