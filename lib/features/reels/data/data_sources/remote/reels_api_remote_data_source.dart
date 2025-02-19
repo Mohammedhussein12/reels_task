@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:reels_task/features/reels/data/data_sources/remote/reels_remote_data_source.dart';
 
 import '../../../../../core/constants.dart';
@@ -5,6 +6,7 @@ import '../../../../../core/data/remote/api_consumer.dart';
 import '../../../../../core/error/exceptions.dart';
 import '../../models/reel_response_model.dart';
 
+@LazySingleton(as: ReelsRemoteDataSource)
 class ReelsApiRemoteDataSource implements ReelsRemoteDataSource {
   final ApiConsumer dio;
 

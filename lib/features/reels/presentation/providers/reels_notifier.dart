@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:injectable/injectable.dart';
 import 'package:reels_task/features/reels/domain/use_cases/get_reels_use_case.dart';
 import 'package:reels_task/features/reels/presentation/providers/reels_states.dart';
 
+@injectable
 class ReelsProvider extends StateNotifier<ReelsStates> {
   final GetReelsUseCase _getReelsUseCase;
 
@@ -11,11 +13,11 @@ class ReelsProvider extends StateNotifier<ReelsStates> {
     state = ReelsLoadingState();
     final result = await _getReelsUseCase();
     result.fold(
-          (failure) {
+      (failure) {
         state = ReelsErrorState(message: failure.message);
         print('Error: ${failure.message}');
       },
-          (reels) {
+      (reels) {
         state = ReelsSuccessState(reels: reels);
         print('Reels fetched successfully');
       },
