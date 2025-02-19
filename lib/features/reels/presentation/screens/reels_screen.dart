@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reels_task/features/reels/presentation/providers/reels_provider.dart';
-import 'package:reels_task/features/reels/presentation/providers/reels_states.dart';
+import 'package:reels_task/features/reels/presentation/providers/reels_notifier.dart';
 import 'package:reels_task/features/reels/presentation/widgets/reels_page_view.dart';
 
 class ReelsScreen extends ConsumerStatefulWidget {
@@ -18,13 +17,13 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      ref.watch(reelsNotifierProvider.notifier).getReels();
+      ref.read(reelsControllerProvider.notifier).getReels();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final reelsState = ref.watch(reelsNotifierProvider);
+    var reelsState = ref.watch(reelsControllerProvider);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -35,24 +34,20 @@ class _ReelsScreenState extends ConsumerState<ReelsScreen> {
         ),
         backgroundColor: Colors.black,
       ),
-      body: _buildBody(reelsState),
-    );
-  }
-
-  Widget _buildBody(ReelsStates reelsState) {
-    if (reelsState is ReelsLoadingState) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (reelsState is ReelsErrorState) {
-      return Center(
-        child: Text(
-          reelsState.message,
-          style: const TextStyle(color: Colors.white),
+      body: reelsState.when(
+        data: (reels) {
+          if (reels.isEmpty) {
+            return const Center(
+              child: Text("No reels available", style: TextStyle(color: Colors.white)),
+            );
+          }
+          return ReelsPageView(reels: reels);
+        },
+        error: (error, _) => Center(
+          child: Text(error.toString(), style: const TextStyle(color: Colors.white)),
         ),
-      );
-    } else if (reelsState is ReelsSuccessState) {
-      return ReelsPageView(reels: reelsState.reels);
-    } else {
-      return const SizedBox.shrink(); // Initial state, nothing to show
-    }
+        loading: () => const Center(child: CircularProgressIndicator()),
+      ),
+    );
   }
 }
