@@ -1,25 +1,25 @@
-import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
-import 'package:reels_task/core/constants.dart';
 import 'package:reels_task/features/reels/data/data_sources/remote/reels_remote_data_source.dart';
+
+import '../../../../../core/constants.dart';
+import '../../../../../core/data/remote/api_consumer.dart';
 import '../../../../../core/error/exceptions.dart';
 import '../../models/reel_response_model.dart';
 
-@LazySingleton(as: ReelsRemoteDataSource)
 class ReelsApiRemoteDataSource implements ReelsRemoteDataSource {
-  final Dio _dio;
+  final ApiConsumer dio;
 
-  const ReelsApiRemoteDataSource(this._dio);
+  const ReelsApiRemoteDataSource(this.dio);
 
   @override
   Future<ReelResponseModel> getReels() async {
     try {
-      final response = await _dio.get(ApiConstants.reelsEndPoint);
-      final json = await response.data;
+      final response = await dio.get(ApiConstants.reelsEndPoint);
+      print('API Response: $response');
+      final json = response;
       return ReelResponseModel.fromJson(json);
     } catch (exception) {
-      throw const RemoteException('Failed to get Reels');
+      print('Exception: $exception');
+      throw RemoteException('Failed to get Reels: $exception');
     }
   }
-
 }

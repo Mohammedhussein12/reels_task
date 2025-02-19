@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/di/service_locator.dart';
-import '../cubit/reals_cubit.dart';
-import '../cubit/reals_state.dart';
-import '../widgets/reels_page_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reels_task/features/reels/presentation/providers/reels_provider.dart';
+import 'package:reels_task/features/reels/presentation/providers/reels_states.dart';
+import 'package:reels_task/features/reels/presentation/widgets/reels_page_view.dart';
 
-class ReelsScreen extends StatelessWidget {
+class ReelsScreen extends ConsumerStatefulWidget {
   static const routeName = '/reelsScreen';
 
   const ReelsScreen({super.key});
 
   @override
+  ConsumerState<ReelsScreen> createState() => _ReelsScreenState();
+}
+
+class _ReelsScreenState extends ConsumerState<ReelsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.watch(reelsNotifierProvider.notifier).getReels();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final reelsState = ref.watch(reelsNotifierProvider);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -22,40 +35,24 @@ class ReelsScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.black,
       ),
-      body: BlocProvider(
-        create: (context) => serviceLocator.get<ReelsCubit>()..getReels(),
-        child: BlocBuilder<ReelsCubit, ReelsState>(
-          builder: (context, state) {
-            if (state is ReelsLoadingState) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
-              );
-            } else if (state is ReelsErrorState) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      state.message,
-                      style: TextStyle(color: Colors.red, fontSize: 16.sp),
-                    ),
-                    SizedBox(height: 16.sp),
-                    ElevatedButton(
-                      onPressed: () => context.read<ReelsCubit>().getReels(),
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              );
-            } else if (state is ReelsSuccessState) {
-              return ReelsPageView(reels: state.reels);
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-      ),
+      body: _buildBody(reelsState),
     );
+  }
+
+  Widget _buildBody(ReelsStates reelsState) {
+    if (reelsState is ReelsLoadingState) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (reelsState is ReelsErrorState) {
+      return Center(
+        child: Text(
+          reelsState.message,
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
+    } else if (reelsState is ReelsSuccessState) {
+      return ReelsPageView(reels: reelsState.reels);
+    } else {
+      return const SizedBox.shrink(); // Initial state, nothing to show
+    }
   }
 }

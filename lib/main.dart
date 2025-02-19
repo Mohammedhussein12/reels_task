@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reels_task/features/reels/presentation/screens/reels_screen.dart';
 
-import 'core/app_bloc_observer.dart';
-import 'core/di/service_locator.dart';
-
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies();
-  Bloc.observer = AppBlocObserver();
-  runApp(const ReelsApp());
+  runApp(
+    const ProviderScope(
+      child: ReelsApp(),
+    ),
+  );
 }
 
 class ReelsApp extends StatelessWidget {
