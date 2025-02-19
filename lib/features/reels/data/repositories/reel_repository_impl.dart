@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:reels_task/features/reels/data/data_sources/remote/reels_remote_data_source.dart';
 import 'package:reels_task/features/reels/data/mappers/reel_mappers.dart';
 import 'package:reels_task/features/reels/domain/entities/reel_item_entity.dart';
@@ -6,6 +7,7 @@ import '../../../../core/error/failure.dart';
 import '../../domain/repositories/reel_repository.dart';
 import 'package:dartz/dartz.dart';
 
+@LazySingleton(as: ReelRepository)
 class ReelRepositoryImpl implements ReelRepository {
   final ReelsRemoteDataSource _remoteDataSource;
   const ReelRepositoryImpl(this._remoteDataSource);

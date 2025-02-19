@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reels_task/features/reels/presentation/screens/reels_screen.dart';
 
+import 'core/di/service_locator.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
   runApp(
     const ProviderScope(
       child: ReelsApp(),
